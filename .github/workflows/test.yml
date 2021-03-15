@@ -26,4 +26,11 @@ jobs:
     - name: Run linter
       run: pipenv run flake8 .
     - name: Run tests
-      run: PYTHONPATH="$(pwd):$PYTHONPATH" pipenv run py.test --cov=crontools tests
+      run: PYTHONPATH="$(pwd):$PYTHONPATH" pipenv run py.test --cov=crontools --cov-report=xml tests
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        flags: unittests
+        fail_ci_if_error: true
