@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: check-docstring-first
+        stages:
+          - commit
+          - push
+      - id: check-merge-conflict
+        stages:
+          - push
+      - id: trailing-whitespace
+        stages:
+          - commit
+          - push
+      - id: end-of-file-fixer
+        stages:
+          - commit
+          - push
+      - id: mixed-line-ending
+        stages:
+          - commit
+          - push
+        args:
+          - --fix=lf
+      - id: no-commit-to-branch
+        stages:
+          - commit
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v1.5.5
+    hooks:
+      - id: autopep8
+        stages:
+          - commit
+          - push
+        args:
+          - --max-line-length=130
+          - --diff
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v2.1.0
+    hooks:
+      - id: add-trailing-comma
+        stages:
+          - commit
+          - push
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.0
+    hooks:
+      - id: flake8
+        stages:
+          - commit
+          - push
