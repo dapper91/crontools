@@ -339,21 +339,21 @@ class DayField:
         curr_weekday = calendar.weekday(year, month, curr_day) + 1
         weekday_iter = self._weekday_field.iter(start_from=curr_weekday)
 
-        for _ in range(4):
-            for weekday in it.cycle(it.chain(weekday_iter, (None,))):
-                if weekday is None:
-                    curr_day += (8 - curr_weekday)
-                    curr_weekday = calendar.weekday(year, month, curr_day) + 1
-                    weekday_iter = self._weekday_field.iter()
-                    break
-                else:
-                    curr_day += (weekday - curr_weekday)
-                    curr_weekday = calendar.weekday(year, month, curr_day) + 1
-
+        for _ in range(5):
+            for weekday in weekday_iter:
+                curr_day += (weekday - curr_weekday)
+                curr_weekday += (weekday - curr_weekday)
                 if curr_day > calendar.monthrange(year, month)[1]:
                     return
 
                 yield curr_day
+
+            curr_day += (8 - curr_weekday)
+            curr_weekday = 1
+            if curr_day > calendar.monthrange(year, month)[1]:
+                return
+
+            weekday_iter = self._weekday_field.iter()
 
 
 @dc.dataclass(frozen=True)
