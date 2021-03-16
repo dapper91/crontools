@@ -460,6 +460,20 @@ def test_cron_iterator_start_from(expr, start_from, result, years_ext, seconds_e
             True,
             True,
         ),
+        (
+                '0 0 * * MON',
+                dt.datetime(year=2021, month=2, day=28, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2021, month=3, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+                False,
+                False,
+        ),
+        (
+                '0 0 * * WED,THU',
+                dt.datetime(year=2021, month=3, day=31, hour=0, minute=0, second=0, microsecond=1, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2021, month=4, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+                False,
+                False,
+        ),
     ],
 )
 @freezegun.freeze_time('2020-01-01 00:00:00.000Z+00:00')
