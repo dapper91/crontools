@@ -53,16 +53,7 @@ class Range:
         cls.aliases = aliases
 
     def __iter__(self) -> Iterator[int]:
-        if self.is_default:
-            begin = self.min_value
-            end = self.max_value
-        else:
-            begin = self.begin
-            end = self.begin if self.end is None else self.end
-
-        step = 1 if self.step is None else self.step
-
-        return iter(range(begin, end + 1, step))
+        return self.iter()
 
     def __str__(self) -> str:
         if self.begin is None:
@@ -139,11 +130,19 @@ class Range:
         :return: range values iterator
         """
 
-        range_iter = iter(self)
-        if start_from:
-            range_iter = it.dropwhile(lambda value: value < start_from, range_iter)
+        if self.is_default:
+            begin = self.min_value
+            end = self.max_value
+        else:
+            begin = self.begin
+            end = self.begin if self.end is None else self.end
 
-        return range_iter
+        step = 1 if self.step is None else self.step
+
+        if start_from is not None:
+            begin = max(begin, start_from)
+
+        return iter(range(begin, end + 1, step))
 
 
 @dc.dataclass(frozen=True)
@@ -236,7 +235,7 @@ class Field(Generic[RangeType]):
         return ",".join(map(str, self.ranges))
 
     def __iter__(self) -> Iterator[int]:
-        return unique(heapq.merge(*self.ranges))
+        return self.iter()
 
     def iter(self, start_from: Optional[int] = None) -> Iterator[int]:
         """
@@ -246,11 +245,7 @@ class Field(Generic[RangeType]):
         :return: iterator over all field values
         """
 
-        range_iter = iter(self)
-        if start_from:
-            range_iter = it.dropwhile(lambda value: value < start_from, range_iter)
-
-        return range_iter
+        return unique(heapq.merge(*(rng.iter(start_from=start_from) for rng in self.ranges)))
 
     @classmethod
     def __init_subclass__(cls, range_type: Type[Range]):
