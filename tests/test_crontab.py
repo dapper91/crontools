@@ -412,6 +412,26 @@ def test_cron_iterator(expr, result, years_ext, seconds_ext):
             False,
             False,
         ),
+        (
+            '0 0 1-31 * *',
+            dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc),
+            [
+                dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc) + dt.timedelta(days=day)
+                for day in range(368)
+            ],
+            False,
+            False,
+        ),
+        (
+            '0 0 * * MON-SUN',
+            dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc),
+            [
+                dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc) + dt.timedelta(days=day)
+                for day in range(367*7)
+            ],
+            False,
+            False,
+        ),
     ],
 )
 @freezegun.freeze_time('2020-01-01 00:00:00.000Z+00:00')
