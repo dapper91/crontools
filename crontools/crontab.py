@@ -334,7 +334,8 @@ class DayField:
         curr_weekday = calendar.weekday(year, month, curr_day) + 1
         weekday_iter = self._weekday_field.iter(start_from=curr_weekday)
 
-        for _ in range(6):
+        max_weeks_in_month = 6
+        for _ in range(max_weeks_in_month):
             for weekday in weekday_iter:
                 curr_day += (weekday - curr_weekday)
                 curr_weekday += (weekday - curr_weekday)
