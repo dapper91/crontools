@@ -2,7 +2,6 @@ import calendar
 import dataclasses as dc
 import datetime as dt
 import heapq
-import itertools as it
 import operator as op
 import tzlocal
 from typing import Any, ClassVar, Dict, Generic, Iterator, Iterable, Optional, Type, TypeVar, Tuple
@@ -298,7 +297,7 @@ class DayField:
     def __iter__(self) -> Iterator[int]:
         return self.iter()
 
-    def iter(self, year: Optional[int] = None, month: Optional[int] = None, start_from: Optional[int] = None) -> Iterator[int]:
+    def iter(self, year: Optional[int] = None, month: Optional[int] = None, start_from: int = 1) -> Iterator[int]:
         """
         Returns iterator over month days and week days values of a particular month and year starting from `start_from`.
 
@@ -313,21 +312,18 @@ class DayField:
         month = now.month if month is None else month
 
         if self._weekday_field.is_default:
-            day_iter = self._monthday_iter(year, month)
+            day_iter = self._monthday_iter(year, month, start_from)
         elif self._monthday_field.is_default:
-            day_iter = self._weekday_iter(year, month)
+            day_iter = self._weekday_iter(year, month, start_from)
         else:
-            day_iter = heapq.merge(self._monthday_iter(year, month), self._weekday_iter(year, month))
-
-        if start_from is not None:
-            day_iter = it.dropwhile(lambda value: value < start_from, day_iter)
+            day_iter = heapq.merge(self._monthday_iter(year, month, start_from), self._weekday_iter(year, month, start_from))
 
         return unique(day_iter)
 
-    def _monthday_iter(self, year: int, month: int) -> Iterator[int]:
-        for day in self._monthday_field:
+    def _monthday_iter(self, year: int, month: int, start_from: int = 1) -> Iterator[int]:
+        for day in self._monthday_field.iter(start_from=start_from):
             if day > calendar.monthrange(year, month)[1]:
-                continue
+                break
 
             yield day
 
