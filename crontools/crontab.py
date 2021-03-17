@@ -7,6 +7,8 @@ import operator as op
 import tzlocal
 from typing import Any, ClassVar, Dict, Generic, Iterator, Iterable, Optional, Type, TypeVar, Tuple
 
+SENTINEL = object()
+
 
 def unique(iterable: Iterable[Any]) -> Iterator[Any]:
     """
@@ -18,7 +20,7 @@ def unique(iterable: Iterable[Any]) -> Iterator[Any]:
 
     it = iter(iterable)
 
-    prev = None
+    prev = SENTINEL
     for val in it:
         if val == prev:
             continue
