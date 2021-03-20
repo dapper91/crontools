@@ -289,7 +289,7 @@ class DayField:
     crontab week days and month days of the current month sequentially.
     """
 
-    def __init__(self, monthday_field: Field[MonthdayRange], weekday_field:  Field[WeekdayRange], tz: dt.timezone):
+    def __init__(self, monthday_field: Field[MonthdayRange], weekday_field:  Field[WeekdayRange], tz: dt.tzinfo):
         self._monthday_field = monthday_field
         self._weekday_field = weekday_field
         self._tz = tz
@@ -378,7 +378,7 @@ class Crontab:
 
     seconds_ext: bool = False
     years_ext: bool = False
-    tz: dt.timezone = dt.timezone.utc
+    tz: dt.tzinfo = dt.timezone.utc
 
     @property
     def day_field(self) -> DayField:
@@ -407,7 +407,7 @@ class Crontab:
             expr: str,
             seconds_ext: bool = False,
             years_ext: bool = False,
-            tz: dt.timezone = tzlocal.get_localzone(),
+            tz: dt.tzinfo = tzlocal.get_localzone(),
             now: Optional[dt.datetime] = None,
     ) -> 'Crontab':
         """
@@ -427,7 +427,7 @@ class Crontab:
             raise ValueError(f"crontab expression must be of {fields_number} fields")
 
         fields_iter = iter(fields)
-        now = now or dt.datetime.now(tz=tz)
+        now = (now or dt.datetime.now(tz=tz)).astimezone(tz)
 
         return cls(
             second_field=SecondsField.fromstr(next(fields_iter)) if seconds_ext else SecondsField.fromstr('0'),
@@ -439,7 +439,7 @@ class Crontab:
             year_field=YearField.fromstr(next(fields_iter)) if years_ext else YearField.fromstr(f'{now.year}-2099'),
             seconds_ext=seconds_ext,
             years_ext=years_ext,
-            tz=tz,
+            tz=now.tzinfo,
         )
 
     def __iter__(self) -> Iterator[dt.datetime]:
@@ -461,6 +461,7 @@ class Crontab:
         :return: datetime iterator
         """
 
+        start_from = start_from.astimezone(self.tz)
         first_run = True
         year_iter = self.year_field.iter(start_from=start_from.year)
 
