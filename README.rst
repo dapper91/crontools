@@ -41,7 +41,7 @@ Quickstart
 
 
 Get next cron fire time:
-________________________
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -62,7 +62,7 @@ ________________________
 
 
 Iteration over cron fire times starting from now:
-_________________________________________________
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
