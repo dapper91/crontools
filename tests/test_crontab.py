@@ -228,9 +228,27 @@ def test_cron_str(expr, seconds_ext, year_ext):
     [
         (
             '*/10',
+            SecondsField,
+            [0, 10, 20, 30, 40, 50],
+            None,
+        ),
+        (
+            '*/10',
+            SecondsField,
+            [20, 30, 40, 50],
+            15,
+        ),
+        (
+            '*/10',
             MinuteField,
             [0, 10, 20, 30, 40, 50],
             None,
+        ),
+        (
+            '*/10',
+            MinuteField,
+            [20, 30, 40, 50],
+            15,
         ),
         (
             '1,2,5,10-20/2,13,40,40',
@@ -239,10 +257,22 @@ def test_cron_str(expr, seconds_ext, year_ext):
             None,
         ),
         (
+            '1,2,5,10-20/2,13,40,40',
+            MinuteField,
+            [5, 10, 12, 13, 14, 16, 18, 20, 40],
+            3,
+        ),
+        (
             '8-23',
             HourField,
             [20, 21, 22, 23],
             20,
+        ),
+        (
+            '*/12',
+            HourField,
+            [12],
+            5,
         ),
         (
             '*',

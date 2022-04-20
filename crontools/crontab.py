@@ -141,7 +141,8 @@ class Range:
         step = 1 if self.step is None else self.step
 
         if start_from is not None:
-            begin = max(begin, start_from)
+            while begin < start_from:
+                begin += step
 
         return iter(range(begin, end + 1, step))
 
