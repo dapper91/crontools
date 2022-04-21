@@ -2,6 +2,7 @@ import calendar
 import dataclasses as dc
 import datetime as dt
 import heapq
+from math import ceil
 import operator as op
 import tzlocal
 from typing import Any, ClassVar, Dict, Generic, Iterator, Iterable, Optional, Type, TypeVar, Tuple
@@ -141,8 +142,8 @@ class Range:
         step = 1 if self.step is None else self.step
 
         if start_from is not None:
-            while begin < start_from:
-                begin += step
+            steps = ceil(max(start_from - begin, 0) / step)
+            begin = begin + steps * step
 
         return iter(range(begin, end + 1, step))
 
