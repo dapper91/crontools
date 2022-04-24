@@ -1,11 +1,12 @@
 import datetime as dt
+from datetime import timezone
 
 import freezegun
 import pytest
 
-from crontools.crontab import Crontab
-from crontools.crontab import SecondsField, MinuteField, HourField, MonthdayField, MonthField, WeekdayField, YearField
-from crontools.crontab import SecondsRange, MinuteRange, HourRange, MonthdayRange, MonthRange, WeekdayRange, YearRange
+from crontools.crontab import Crontab, HourField, HourRange, MinuteField, MinuteRange, MonthdayField, MonthdayRange
+from crontools.crontab import MonthField, MonthRange, SecondsField, SecondsRange, WeekdayField, WeekdayRange, YearField
+from crontools.crontab import YearRange
 
 
 @pytest.mark.parametrize(
@@ -314,8 +315,8 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 1 1 *',
             [
-                dt.datetime(year=2020, month=1, day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2021, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             False,
             False,
@@ -323,10 +324,10 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 * * TUE,FRI',
             [
-                dt.datetime(year=2020, month=1, day=3,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=7,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=10, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=14, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=3,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=7,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=10, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=14, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             False,
             False,
@@ -334,12 +335,12 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 10,3,2,1 * TUE,FRI',
             [
-                dt.datetime(year=2020, month=1, day=1,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=2,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=3,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=7,  hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=10, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=14, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=1,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=2,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=3,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=7,  hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=10, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=14, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             False,
             False,
@@ -347,12 +348,12 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 1-10/2,2 1 1 *',
             [
-                dt.datetime(year=2020, month=1, day=1, hour=1, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=2, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=3, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=5, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=7, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=9, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=1, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=2, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=3, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=5, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=7, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=9, minute=0, second=0, tzinfo=timezone.utc),
             ],
             False,
             False,
@@ -360,9 +361,9 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 0 28-31 2,3 * 2020',
             [
-                dt.datetime(year=2020, month=2,  day=28, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=2,  day=29, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=3,  day=28, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=2,  day=28, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=2,  day=29, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=3,  day=28, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             True,
             True,
@@ -370,8 +371,8 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 0 28-31 2,3 * 2021',
             [
-                dt.datetime(year=2021, month=2, day=28, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2021, month=3, day=28, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2021, month=2, day=28, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2021, month=3, day=28, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             True,
             True,
@@ -379,12 +380,12 @@ def test_cron_field_iterator(expr, Field, result, start_from):
         (
             '0 0 0 1 1-5,2-4,3 * 2020,2021',
             [
-                dt.datetime(year=2020, month=1,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=2,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=3,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=4,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=5,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2021, month=1,  day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=2,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=3,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=4,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=5,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2021, month=1,  day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             True,
             True,
@@ -393,7 +394,7 @@ def test_cron_field_iterator(expr, Field, result, start_from):
 )
 @freezegun.freeze_time('2020-01-01 00:00:00.000Z+00:00')
 def test_cron_iterator(expr, result, years_ext, seconds_ext):
-    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=dt.timezone.utc)
+    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=timezone.utc)
 
     for actual, expected in zip(cron, result):
         assert actual == expected
@@ -404,49 +405,49 @@ def test_cron_iterator(expr, result, years_ext, seconds_ext):
     [
         (
             '* * * * * *',
-            dt.datetime(year=2020, month=2,  day=28, hour=12, minute=30, second=0, microsecond=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=2, day=28, hour=12, minute=30, second=0, microsecond=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=2,  day=28, hour=12, minute=31, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=2,  day=28, hour=12, minute=32, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=2, day=28, hour=12, minute=31, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=2, day=28, hour=12, minute=32, second=0, tzinfo=timezone.utc),
             ],
             True,
             False,
         ),
         (
             '* * * * * * *',
-            dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=0, microsecond=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=0, microsecond=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=1, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=2, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=1, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=2, tzinfo=timezone.utc),
             ],
             True,
             True,
         ),
         (
             '0 * * * * * *',
-            dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=0, microsecond=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=1, day=1, hour=12, minute=30, second=0, microsecond=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=1, day=1, hour=12, minute=31, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=1, day=1, hour=12, minute=32, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=12, minute=31, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=1, day=1, hour=12, minute=32, second=0, tzinfo=timezone.utc),
             ],
             True,
             True,
         ),
         (
             '0 0 * * *',
-            dt.datetime(year=2020, month=2, day=28, hour=0, minute=0, second=0, microsecond=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=2, day=28, hour=0, minute=0, second=0, microsecond=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=2, day=29, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2020, month=3, day=1, hour=0, minute=0, second=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2020, month=2, day=29, hour=0, minute=0, second=0, tzinfo=timezone.utc),
+                dt.datetime(year=2020, month=3, day=1, hour=0, minute=0, second=0, tzinfo=timezone.utc),
             ],
             False,
             False,
         ),
         (
             '0 0 1-31 * *',
-            dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=1, day=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc) + dt.timedelta(days=day)
+                dt.datetime(year=2020, month=1, day=1, tzinfo=timezone.utc) + dt.timedelta(days=day)
                 for day in range(368)
             ],
             False,
@@ -454,9 +455,9 @@ def test_cron_iterator(expr, result, years_ext, seconds_ext):
         ),
         (
             '0 0 * * MON-SUN',
-            dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=1, day=1, tzinfo=timezone.utc),
             [
-                dt.datetime(year=2020, month=1, day=1, tzinfo=dt.timezone.utc) + dt.timedelta(days=day)
+                dt.datetime(year=2020, month=1, day=1, tzinfo=timezone.utc) + dt.timedelta(days=day)
                 for day in range(367*7)
             ],
             False,
@@ -466,7 +467,7 @@ def test_cron_iterator(expr, result, years_ext, seconds_ext):
 )
 @freezegun.freeze_time('2020-01-01 00:00:00.000Z+00:00')
 def test_cron_iterator_start_from(expr, start_from, result, years_ext, seconds_ext):
-    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=dt.timezone.utc)
+    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=timezone.utc)
 
     for actual, expected in zip(cron.iter(start_from), result):
         assert actual == expected
@@ -477,50 +478,50 @@ def test_cron_iterator_start_from(expr, start_from, result, years_ext, seconds_e
     [
         (
             '* * * * *',
-            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=0, microsecond=1, tzinfo=dt.timezone.utc),
-            dt.datetime(year=2021, month=3, day=13, hour=23, minute=15, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=0, microsecond=1, tzinfo=timezone.utc),
+            dt.datetime(year=2021, month=3, day=13, hour=23, minute=15, second=0, microsecond=0, tzinfo=timezone.utc),
             False,
             False,
         ),
         (
             '* * * * * *',
-            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=0, microsecond=1, tzinfo=dt.timezone.utc),
-            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=1, microsecond=0, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=0, microsecond=1, tzinfo=timezone.utc),
+            dt.datetime(year=2021, month=3, day=13, hour=23, minute=14, second=1, microsecond=0, tzinfo=timezone.utc),
             False,
             True,
         ),
         (
             '* * * * *',
-            dt.datetime(year=2020, month=2, day=28, hour=23, minute=59, second=1, tzinfo=dt.timezone.utc),
-            dt.datetime(year=2020, month=2, day=29, hour=0, minute=0, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=2, day=28, hour=23, minute=59, second=1, tzinfo=timezone.utc),
+            dt.datetime(year=2020, month=2, day=29, hour=0, minute=0, tzinfo=timezone.utc),
             False,
             False,
         ),
         (
             '* * * * *',
-            dt.datetime(year=2020, month=12, day=31, hour=23, minute=59, second=1, tzinfo=dt.timezone.utc),
-            dt.datetime(year=2021, month=1,  day=1,  hour=0,  minute=0, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2020, month=12, day=31, hour=23, minute=59, second=1, tzinfo=timezone.utc),
+            dt.datetime(year=2021, month=1,  day=1,  hour=0,  minute=0, tzinfo=timezone.utc),
             False,
             False,
         ),
         (
             '1 42 13 12 3 * 2021',
-            dt.datetime(year=2021, month=3, day=12, hour=13, minute=42, second=1, microsecond=1, tzinfo=dt.timezone.utc),
+            dt.datetime(year=2021, month=3, day=12, hour=13, minute=42, second=1, microsecond=1, tzinfo=timezone.utc),
             None,
             True,
             True,
         ),
         (
                 '0 0 * * MON',
-                dt.datetime(year=2021, month=2, day=28, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2021, month=3, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2021, month=2, day=28, hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc),
+                dt.datetime(year=2021, month=3, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc),
                 False,
                 False,
         ),
         (
                 '0 0 * * WED,THU',
-                dt.datetime(year=2021, month=3, day=31, hour=0, minute=0, second=0, microsecond=1, tzinfo=dt.timezone.utc),
-                dt.datetime(year=2021, month=4, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=dt.timezone.utc),
+                dt.datetime(year=2021, month=3, day=31, hour=0, minute=0, second=0, microsecond=1, tzinfo=timezone.utc),
+                dt.datetime(year=2021, month=4, day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc),
                 False,
                 False,
         ),
@@ -528,6 +529,6 @@ def test_cron_iterator_start_from(expr, start_from, result, years_ext, seconds_e
 )
 @freezegun.freeze_time('2020-01-01 00:00:00.000Z+00:00')
 def test_cron_next_fire_time(expr, now, result, years_ext, seconds_ext):
-    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=dt.timezone.utc)
+    cron = Crontab.parse(expr, years_ext=years_ext, seconds_ext=seconds_ext, tz=timezone.utc)
 
     assert cron.next_fire_time(now) == result
