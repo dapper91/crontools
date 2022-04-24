@@ -2,10 +2,12 @@ import calendar
 import dataclasses as dc
 import datetime as dt
 import heapq
-from math import ceil
 import operator as op
+from math import ceil
+from typing import Any, ClassVar, Dict, Generator, Generic, Iterable, Iterator, Optional, Tuple, Type, TypeVar, Union
+from typing import cast
+
 import tzlocal
-from typing import Any, ClassVar, Dict, Generic, Iterator, Iterable, Optional, Type, TypeVar, Tuple
 
 SENTINEL = object()
 
@@ -83,19 +85,19 @@ class Range:
         begin, end, step = None, None, None
         string = string.strip()
 
-        interval, *maybe_step = string.split('/', maxsplit=1)
-        if maybe_step:
-            maybe_step = maybe_step[0]
+        interval, *rem = string.split('/', maxsplit=1)
+        if rem:
+            maybe_step = rem[0]
             step = cls._parse_number(maybe_step)
 
         if interval == '*':
             return cls(None, None, step)
 
-        begin, *maybe_end = interval.split('-', maxsplit=1)
+        begin, *rem = interval.split('-', maxsplit=1)
         begin = cls.aliases.get(begin, begin) if cls.aliases else begin
         begin = cls._parse_number(begin)
-        if maybe_end:
-            maybe_end = maybe_end[0]
+        if rem:
+            maybe_end = rem[0]
             maybe_end = cls.aliases.get(maybe_end, maybe_end) if cls.aliases else maybe_end
 
             end = cls._parse_number(maybe_end)
@@ -105,16 +107,18 @@ class Range:
         return cls(begin, end, step)
 
     @classmethod
-    def _parse_number(cls, value: str):
+    def _parse_number(cls, value: Union[str, int]) -> int:
         try:
-            value = int(value)
+            parsed_value = int(value)
         except ValueError:
             raise ValueError(f"{cls.title} value must be of type int, got: {value}")
 
-        if not (cls.min_value <= value <= cls.max_value):
-            raise ValueError(f"{cls.title} value must be of range [{cls.min_value}, {cls.max_value}], got: {value}")
+        if not (cls.min_value <= parsed_value <= cls.max_value):
+            raise ValueError(
+                f"{cls.title} value must be of range [{cls.min_value}, {cls.max_value}], got: {parsed_value}",
+            )
 
-        return value
+        return parsed_value
 
     @property
     def is_default(self) -> bool:
@@ -136,6 +140,8 @@ class Range:
             begin = self.min_value
             end = self.max_value
         else:
+            assert self.begin is not None
+
             begin = self.begin
             end = self.begin if self.end is None else self.end
 
@@ -263,9 +269,9 @@ class Field(Generic[RangeType]):
         :return: field
         """
 
-        ranges = (cls.range_type.fromstr(item) for item in string.split(','))
+        ranges = cast(Iterable[RangeType], (cls.range_type.fromstr(item) for item in string.split(',')))
 
-        return cls(ranges=tuple(sorted(ranges, key=lambda rng: rng.begin)))
+        return cls(ranges=tuple(sorted(ranges, key=lambda rng: rng.begin if rng.begin is not None else rng.min_value)))
 
     @property
     def is_default(self) -> bool:
@@ -313,23 +319,27 @@ class DayField:
         year = now.year if year is None else year
         month = now.month if month is None else month
 
+        day_iter: Iterable[int]
         if self._weekday_field.is_default:
             day_iter = self._monthday_iter(year, month, start_from)
         elif self._monthday_field.is_default:
             day_iter = self._weekday_iter(year, month, start_from)
         else:
-            day_iter = heapq.merge(self._monthday_iter(year, month, start_from), self._weekday_iter(year, month, start_from))
+            day_iter = heapq.merge(
+                self._monthday_iter(year, month, start_from),
+                self._weekday_iter(year, month, start_from),
+            )
 
         return unique(day_iter)
 
-    def _monthday_iter(self, year: int, month: int, start_from: int = 1) -> Iterator[int]:
+    def _monthday_iter(self, year: int, month: int, start_from: int = 1) -> Generator[int, None, None]:
         for day in self._monthday_field.iter(start_from=start_from):
             if day > calendar.monthrange(year, month)[1]:
                 break
 
             yield day
 
-    def _weekday_iter(self, year: int, month: int, start_day: int = 1) -> Iterator[int]:
+    def _weekday_iter(self, year: int, month: int, start_day: int = 1) -> Generator[int, None, None]:
         curr_day = start_day
         curr_weekday = calendar.weekday(year, month, curr_day) + 1
         weekday_iter = self._weekday_field.iter(start_from=curr_weekday)
@@ -430,6 +440,7 @@ class Crontab:
 
         fields_iter = iter(fields)
         now = (now or dt.datetime.now(tz=tz)).astimezone(tz)
+        assert now.tzinfo is not None
 
         return cls(
             second_field=SecondsField.fromstr(next(fields_iter)) if seconds_ext else SecondsField.fromstr('0'),
@@ -452,7 +463,8 @@ class Crontab:
                         for minute in self.minute_field:
                             for second in self.second_field:
                                 yield dt.datetime(
-                                    year=year, month=month, day=day, hour=hour, minute=minute, second=second, tzinfo=self.tz,
+                                    year=year, month=month, day=day,
+                                    hour=hour, minute=minute, second=second, tzinfo=self.tz,
                                 )
 
     def iter(self, start_from: dt.datetime) -> Iterator[dt.datetime]:
@@ -508,7 +520,8 @@ class Crontab:
                                         continue
 
                                 yield dt.datetime(
-                                    year=year, month=month, day=day, hour=hour, minute=minute, second=second, tzinfo=self.tz,
+                                    year=year, month=month, day=day,
+                                    hour=hour, minute=minute, second=second, tzinfo=self.tz,
                                 )
 
                             first_run = False

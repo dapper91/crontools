@@ -62,3 +62,13 @@ repos:
           - --line-length=120
           - --multi-line=9
           - --project=crontools
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.0.1
+    hooks:
+      - id: mypy
+        stages:
+          - commit
+        name: mypy
+        pass_filenames: false
+        args: ["--package", "crontools"]
+        additional_dependencies: ["types-tzlocal"]
