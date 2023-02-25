@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crontools"
-version = "0.1.5"
+version = "0.1.6"
 description = "Python cron tools"
 authors = ["Dmitry Pershin <dapper1291@gmail.com>"]
 license = "Unlicense"
@@ -9,6 +9,7 @@ homepage = "https://github.com/dapper91/crontools"
 repository = "https://github.com/dapper91/crontools"
 keywords = ["cron", "crontab", "cron-utils", "cron-tools", "parser"]
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
     "License :: Public Domain",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
