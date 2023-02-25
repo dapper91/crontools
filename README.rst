@@ -2,7 +2,10 @@
 crontools
 =========
 
-.. image:: https://github.com/dapper91/crontools/actions/workflows/test.yml/badge.svg
+.. image:: https://static.pepy.tech/personalized-badge/crontools?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Downloads/month
+    :target: https://pepy.tech/project/crontools
+    :alt: Downloads/month
+.. image:: https://github.com/dapper91/crontools/actions/workflows/test.yml/badge.svg?branch=master
     :target: https://github.com/dapper91/crontools/actions/workflows/test.yml
     :alt: Build status
 .. image:: https://img.shields.io/pypi/l/crontools.svg

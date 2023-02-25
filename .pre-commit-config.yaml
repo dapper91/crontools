@@ -1,52 +1,74 @@
+default_stages:
+ - commit
+ - merge-commit
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.4.0
     hooks:
-      - id: check-docstring-first
-        stages:
-          - commit
-          - push
-      - id: check-merge-conflict
-        stages:
-          - push
+      - id: check-yaml
+      - id: check-toml
       - id: trailing-whitespace
-        stages:
-          - commit
-          - push
       - id: end-of-file-fixer
         stages:
           - commit
-          - push
       - id: mixed-line-ending
+        name: fix line ending
         stages:
           - commit
-          - push
         args:
           - --fix=lf
-      - id: no-commit-to-branch
+      - id: mixed-line-ending
+        name: check line ending
         stages:
-          - commit
-  - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v1.5.5
-    hooks:
-      - id: autopep8
-        stages:
-          - commit
-          - push
+          - merge-commit
         args:
-          - --max-line-length=130
-          - --diff
+          - --fix=no
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.1.0
+    rev: v2.4.0
     hooks:
       - id: add-trailing-comma
         stages:
           - commit
-          - push
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.0
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.1
     hooks:
-      - id: flake8
+      - id: autopep8
         stages:
           - commit
-          - push
+        args:
+          - --diff
+  - repo: https://github.com/pycqa/flake8
+    rev: 5.0.4
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.5
+    hooks:
+      - id: isort
+        name: fix import order
+        stages:
+          - commit
+        args:
+          - --line-length=120
+          - --multi-line=9
+          - --project=crontools
+      - id: isort
+        name: check import order
+        stages:
+          - merge-commit
+        args:
+          - --check-only
+          - --line-length=120
+          - --multi-line=9
+          - --project=crontools
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.0.1
+    hooks:
+      - id: mypy
+        stages:
+          - commit
+        name: mypy
+        pass_filenames: false
+        args: ["--package", "crontools"]
+        additional_dependencies: ["types-tzlocal"]

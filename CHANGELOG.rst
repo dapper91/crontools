@@ -1,6 +1,14 @@
 Changelog
 =========
 
+
+0.1.6 (2022-04-24)
+------------------
+
+- pipenv substituted by poetry
+- mypy checker added
+
+
 0.1.5 (2022-04-24)
 ------------------
 
