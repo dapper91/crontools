@@ -25,14 +25,14 @@ include = ["crontools/py.typed"]
 [tool.poetry.dependencies]
 python = "^3.7"
 tzlocal = "^2.0"
-types-tzlocal = "^4.1.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.0"
-pytest-cov = "^2.0"
-freezegun = "^1.2"
+pre-commit = "^2.21.0"
 mypy = "^1.0.1"
-pre-commit = "^2.18.1"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+freezegun = "^1.2.1"
+types-tzlocal = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
